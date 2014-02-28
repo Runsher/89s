@@ -7,6 +7,14 @@ Created on 2010-9-15
 import urllib2
 import re
 import socket
+import lxml.html.soupparser as soupparser
+import bs4
+from bs4 import BeautifulSoup
+import os
+import lxml
+import MySQL
+#import BeautifulSoup
+
 
 import sys
 reload(sys)
@@ -127,4 +135,10 @@ if __name__ == '__main__':
 		]
 	t = PageGripper()
 	for url in list:
-		print t.getPageInfo(url)
+		page = t.getPageInfo(url)
+		dom = soupparser.fromstring(page)
+		soup = BeautifulSoup(page)
+		title =  soup.find('title').text.decode('utf-8')
+		sql = 'insert into test.spider(Title) values("%s")' % title
+		print sql
+		MySQL.MysqlQuery().query('sql')
